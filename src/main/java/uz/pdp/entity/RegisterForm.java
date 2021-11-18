@@ -12,6 +12,7 @@ public class RegisterForm {
     private String age;
     private String address;
     private String profession;
-
+    private Integer counterMessage;
+//    private Long chatId;
 
 }

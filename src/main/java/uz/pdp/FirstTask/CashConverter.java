@@ -12,12 +12,13 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import uz.pdp.entity.RegisterForm;
 
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class CashConverter extends TelegramLongPollingBot {
+    private  static Map<Long,RegisterForm> registerFormMap=new HashMap<>();
     public static int counterMessage = 0;
-    RegisterForm registerForm=new RegisterForm();
+    private RegisterForm registerForm;
+
     public static void main(String[] args) {
         ApiContextInitializer.init();
         TelegramBotsApi api = new TelegramBotsApi();
@@ -31,8 +32,10 @@ public class CashConverter extends TelegramLongPollingBot {
 
     @Override
     public  void onUpdateReceived(Update update) {
-
-
+        registerForm = registerFormMap.putIfAbsent(update.getMessage().getChatId(), new RegisterForm());
+        if (registerForm==null){
+            registerForm=new RegisterForm();
+        }
 
 
         SendMessage sendMessage = new SendMessage();
@@ -53,33 +56,33 @@ public class CashConverter extends TelegramLongPollingBot {
 
                 sendMessage.setChatId(280692014l);
 //                sendMessage.setChatId(575428234l);
-                sendMessage.setText(registerForm.toString());
+                sendMessage.setText(this.registerForm.toString());
             }
             else  if (counterMessage==1){
-                registerForm.setFullName(inputText);
+                this.registerForm.setFullName(inputText);
                 sendMessage.setText("Yoshingizni kiriting:");
 
                 counterMessage++;
 
             }else if (counterMessage==2){
-                registerForm.setAge(inputText);
+                this.registerForm.setAge(inputText);
                 sendMessage.setText("Yashash manzilingizni kiriting:\n" +
                         "(Viloyat, shahar, tuman)");
                 counterMessage++;
 
             }else if (counterMessage==3){
-                registerForm.setAddress(inputText);
+                this.registerForm.setAddress(inputText);
                 sendMessage.setText("Kasbiy faoliyatingizni kiriting:\n" +
                         "(Talaba bo'lsangiz o'qish joyingizni kiriting");
                 counterMessage++;
 
             }else if (counterMessage==4){
-                registerForm.setProfession(inputText);
+                this.registerForm.setProfession(inputText);
                 sendMessage.setText("kiritilgan ma'lumotlarni tekshirib chiqing\n"+
-                        "FIO: "+registerForm.getFullName()+",\n" +
-                        "yoshigiz: "+registerForm.getAge()+",\n" +
-                        "manzilingiz: "+registerForm.getAddress()+",\n" +
-                        "kasbiy faoliyatingiz: "+registerForm.getProfession()+".\n" +
+                        "FIO: "+ this.registerForm.getFullName()+",\n" +
+                        "yoshigiz: "+ this.registerForm.getAge()+",\n" +
+                        "manzilingiz: "+ this.registerForm.getAddress()+",\n" +
+                        "kasbiy faoliyatingiz: "+ this.registerForm.getProfession()+".\n" +
                         "Kiritilgan ma'lumotlar to'g'ri bo'lsa /ok yuboring aks holda /start");
 
 
