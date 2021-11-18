@@ -12,7 +12,8 @@ public class RegisterForm {
     private String age;
     private String address;
     private String profession;
-    private Integer counterMessage;
-//    private Long chatId;
+    private Integer counterMessage=0;
+    private Long chatId;
+    private boolean isSentToAdmin=false;
 
 }
